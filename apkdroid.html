@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta property="og:title" content="APKDROID – Jogos Mobile APK">
+<meta property="og:description" content="Baixe jogos mobile APK e Ports De Jogos De Pc para Android.">
+<meta property="og:image" content="https://SEUSITE/img/logo.png">
+<meta property="og:type" content="website">
+<img src="https://i.pinimg.com/736x/17/68/44/1768446b058101ea94825d261c9f2243.jpg" alt="APKDROID Logo" class="logo">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APKDROID - Jogos Mobile</title>
+<meta name="description" content="APKDROID é um site de jogos mobile em APK para Android. Baixe jogos indie leves, gratuitos e atualizados.">
+
+  <!-- ÍCONE DO SITE -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0 }
+      to { opacity: 1 }
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      background: #141414;
+      border-bottom: 1px solid #222;
+    }
+
+    header h1 {
+      font-size: 28px;
+      letter-spacing: 2px;
+    }
+
+    header p {
+      margin-top: 6px;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .search-box {
+      margin-top: 15px;
+    }
+
+    .search-box input {
+      width: 90%;
+      max-width: 400px;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .games {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .game-card {
+      background: #151515;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 15px;
+      animation: cardFade 0.4s ease;
+      transition: transform 0.2s ease;
+    }
+
+    @keyframes cardFade {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .game-card:hover {
+      transform: scale(1.03);
+    }
+
+    .game-card img {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .game-card h2 {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .game-card p {
+      font-size: 14px;
+      color: #bbb;
+      margin-bottom: 12px;
+    }
+
+    .game-card a {
+      display: block;
+      text-align: center;
+      padding: 10px;
+      background: #1f6bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .game-card a:hover {
+      background: #1554cc;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 13px;
+      color: #666;
+      border-top: 1px solid #222;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>APKDROID</h1>
+  <p>Jogos mobile APK</p>
+
+  <!-- BUSCA -->
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Buscar jogo...">
+  </div>
+</header>
+
+<main>
+  <section class="games" id="games">
+
+    <div class="game-card" data-name="red dead redemption 2">
+      <img src="https://i.pinimg.com/736x/4f/44/bf/4f44bf0259b481ca82aa280506f57c3b.jpg">
+      <h2>Red Dead Redemption 2 Mobile</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/zbf7ayb5bm8d3gn/RED+DEAD+2+MOBILE.zip/file" target="_blank">Download APK</a>
+    </div>
+
+    <div class="game-card" data-name="cuphead">
+      <img src="https://preview.redd.it/steam-icons-in-good-quality-v0-9d583ejhuswd1.jpg?width=500&format=pjpg&auto=webp&s=78bf0525da24acb099fc8af6ac843142e7437ef2">
+      <h2>Cuphead Mobile</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/k8m52vc20kyzc55/Cuphead-DLC-v1.0.2.apk/file" target="_blank">Download APK</a>
+    </div>
+
+    <div class="game-card" data-name="minecraft">
+      <img src="https://cdn.iconscout.com/icon/free/png-256/free-minecraft-logo-icon-svg-download-png-2284937.png">
+      <h2>Minecraft</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/qkhx75rk4976xux/minecraft-v1.26.32.2-final-mod2.apk/file">Download APK</a>
+    </div>
+
+<div class="game-card" data-name="Grand Theft Auto: San Andreas (GTA SA)">
+      <img src="https://sm.ign.com/ign_br/cover/g/grand-thef/grand-theft-auto-san-andreas-vr_p7m9.jpg">
+      <h2>Grand Theft Auto: San Andreas</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/0w4x6oh346jt0x9/GTA-SA-ver2.11.311-mod-menu-apkvision.apk/file">Download APK</a>
+    </div>
+
+    <div class="game-card" data-name="hollow knight silksong">
+      <img src="https://avatars.fastly.steamstatic.com/b4a999c1302e3ac123c041fd41bb8a34528c6ab5_full.jpg">
+      <h2>Hollow Knight Silksong</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/jn9t6lu2nsct23e/Silksong-v1.2.0-full-apkvision.apk/file">Download APK</a>
+    </div>
+
+ <div class="game-card" data-name="Grand Theft Auto 5 (GTA 5) Fan Gmae">
+      <img src="https://www.rw-designer.com/icon-image/21515-256x256x32.png">
+      <h2>Grand Theft Auto 5 (GTA 5)</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/qnb4g5svj7qwe42/LAUCUE4-V6.4-HDR-arm64.apk">Download APK</a>
+    </div>
+
+<div class="game-card" data-name="The Last Of Us (Copias Mobile)">
+      <img src="https://i.pinimg.com/originals/c6/96/57/c69657ca2be845bbd36b341fa5e1cdec.jpg">
+      <h2>The Last Of Us (Copias Mobile)</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/iph87szxwc6e07g/Tlou.zip/file">Download APK</a>
+    </div>
+
+<div class="game-card" data-name="fears to fathom">
+      <img src="https://cdn2.steamgriddb.com/icon/a24bce95b0afc158687c2af760cc4d46/32/256x256.png">
+      <h2>Fears To Fathom</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/b8zyh49xnjjy917/Fears+to+Fathom+-+Home+Alone_1.0.0_APKPure.xapk/file">Download APK</a>
+    </div>
+
+<div class="game-card" data-name="subnautica">
+      <img src="https://playdigious.com/press/subnautica/images/Icon%20Peeper.png">
+      <h2>Subnautica</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/z6djupxvtrqnbct/subnautica_1.22.83416-an1.com.apk/file">Download APK</a>
+    </div>
+
+
+<div class="game-card" data-name="spider man copia">
+      <img src="https://makerworld.bblmw.com/makerworld/model/US599b3d018d42ce/design/2024-03-18_961bfe5754b32.jpg">
+      <h2>Spider-Man Copia</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/03bsxygj1sieuov/Spider+Fuser_+Hero+Simulator_2.03_APKPure.xapk/file">Download APK</a>
+    </div>
+
+<div class="game-card" data-name="undertale">
+      <img src="https://i.pinimg.com/originals/cc/1f/8d/cc1f8d6e36fe80b9b699fe1b324e469a.jpg">
+      <h2>Undertale</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/9kxcxkirtyn7h9h/undertale.zip/file">Download APK</a>
+    </div>
+
+<div class="game-card" data-name="deltarune">
+      <img src="https://styles.redditmedia.com/t5_qmi8w/styles/communityIcon_4a7jqgtwgffc1.png">
+      <h2>Deltarune</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/lca9e9uny0vduqo/Deltarune-v6.0.0-full-apkvision.apk/file">Download APK</a>
+    </div>
+
+<div class="game-card" data-name="astro bot fan game">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9i7shBb_s___M9YQulA-CcvpY56rF08Brsw&s">
+      <h2>Astro Bot Fan Game</h2>
+      <p></p>
+      <a href="https://www.mediafire.com/file/uzf4qcp1r9hbs8w/Astro_bot_Fase_1_Remake_Demo_V1.catrobat/file">Download APK</a>
+    </div>
+
+<meta name="keywords" content="jogos apk, jogos android, jogos mobile, baixar apk, jogos indie android">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- DUPLIQUE OS CARDS PRA MAIS JOGOS -->
+
+  </section>
+</main>
+
+<footer>
+  © 2026 APKDROID • Jogos Mobile
+</footer>
+
+<script>
+  const searchInput = document.getElementById("search");
+  const cards = document.querySelectorAll(".game-card");
+
+  searchInput.addEventListener("input", () => {
+    const value = searchInput.value.toLowerCase();
+
+    cards.forEach(card => {
+      const name = card.dataset.name;
+      card.style.display = name.includes(value) ? "block" : "none";
+    });
+  });
+</script>
+
+</body>
+</html>
