@@ -12,12 +12,14 @@
   --muted:#9aa0aa;
   --blue:#4da3ff;
   --border:#1f2430;
+  --fire:#ff5e3a;
 }
 *{box-sizing:border-box;font-family:Inter,system-ui;}
 body{
   margin:0;
   background:radial-gradient(circle at top,#12141c,#07080c 60%);
   color:#fff;
+  background-color: var(--bg);
 }
 .container{max-width:1200px;margin:auto;padding:40px 20px;}
 .logo{font-size:22px;font-weight:800;}
@@ -29,18 +31,45 @@ body{
 .search input{
   width:100%;padding:16px 20px;border-radius:30px;
   border:1px solid var(--border);background:#0e1016;color:#fff;
+  outline: none;
 }
+.search input:focus {border-color: var(--blue);}
 
 .filters{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px;}
 .filter{
   padding:10px 16px;border-radius:20px;
   background:#0e1016;border:1px solid var(--border);
-  cursor:pointer;font-size:13px;
+  cursor:pointer;font-size:13px;transition: 0.2s;
 }
-.filter.active{background:var(--blue);color:#000;}
+.filter:hover {border-color: var(--blue);}
+.filter.active{background:var(--blue);color:#000;font-weight: 600;}
 
+/* SEÇÃO EM ALTA */
+.section-title {
+  font-size: 20px;
+  margin-top: 40px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.trending-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.trending-grid .card {
+  border-color: rgba(255, 94, 58, 0.2);
+}
+.trending-grid .card:hover {
+  border-color: var(--fire);
+  box-shadow: 0 4px 20px rgba(255, 94, 58, 0.15);
+}
+
+/* GRADE GERAL */
 .grid{
-  margin-top:30px;
+  margin-top:20px;
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
   gap:20px;
@@ -53,44 +82,64 @@ body{
   overflow:hidden;
   cursor:pointer;
   transition:.2s;
+  display: flex;
+  flex-direction: column;
 }
 .card:hover{transform:translateY(-4px);}
 .card img{
   width:100%;height:160px;object-fit:cover;
 }
-.card .info{padding:14px;}
-.tag{font-size:11px;color:var(--blue);}
+.card .info{padding:14px; flex-grow: 1;}
+.card h3 {margin: 8px 0 0 0; font-size: 16px; line-height: 1.3;}
+.tag{font-size:11px;color:var(--blue);text-transform: uppercase;font-weight: 600;}
 .top{
   position:absolute;top:10px;right:10px;
-  background:var(--blue);color:#000;
-  font-size:11px;padding:4px 8px;border-radius:10px;
-  font-weight:700;
+  background:var(--fire);color:#fff;
+  font-size:10px;padding:4px 8px;border-radius:10px;
+  font-weight:700;box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.dl-count {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 5px;
+  display: block;
 }
 
-/* MODAL (PÁGINA DO JOGO) */
+/* MODAL */
 .modal{
   position:fixed;inset:0;
-  background:rgba(0,0,0,.7);
+  background:rgba(0,0,0,.8);
   display:none;align-items:center;justify-content:center;
+  z-index: 100;
+  padding: 20px;
 }
 .modal-content{
   background:#0e1016;
-  max-width:900px;width:90%;
+  max-width:700px;width:100%;
   border-radius:20px;
   overflow:hidden;
+  border: 1px solid var(--border);
+  position: relative;
 }
-.modal-content img{width:100%;height:300px;object-fit:cover;}
-.modal-body{padding:20px;}
+.modal-content img{width:100%;height:280px;object-fit:cover;}
+.modal-body{padding:25px;}
 .btn{
   display:inline-block;
   background:var(--blue);
   color:#000;
-  padding:14px 22px;
+  padding:14px 28px;
   border-radius:30px;
   font-weight:700;
   text-decoration:none;
+  transition: 0.2s;
 }
-.close{cursor:pointer;color:var(--muted);}
+.btn:hover {opacity: 0.9; transform: scale(1.02);}
+.close{
+  position: absolute; top: 15px; right: 15px;
+  cursor:pointer;color:#fff; background: rgba(0,0,0,0.6);
+  padding: 8px 12px; border-radius: 20px; font-size: 12px;
+  z-index: 10;
+}
 </style>
 </head>
 
@@ -109,6 +158,12 @@ body{
     <input id="search" placeholder="Buscar jogos...">
   </div>
 
+  <div id="trending-container" style="display: none;">
+    <h2 class="section-title">🔥 MAIS BAIXADOS DO SITE</h2>
+    <div class="trending-grid" id="trending-grid"></div>
+  </div>
+
+  <h2 class="section-title" id="catalog-title">🎮 TODOS OS JOGOS</h2>
   <div class="filters">
     <div class="filter active" data-cat="ALL">TODOS</div>
     <div class="filter" data-cat="PORT">PORT</div>
@@ -121,167 +176,161 @@ body{
   <div class="grid" id="grid"></div>
 </div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
+<div class="modal" id="modal" onclick="if(event.target === this) closeModal()">
   <div class="modal-content">
+    <span class="close" onclick="closeModal()">✖ Fechar</span>
     <img id="modalImg">
     <div class="modal-body">
-      <span class="close" onclick="closeModal()">✖ Fechar</span>
-      <h2 id="modalTitle"></h2>
+      <h2 id="modalTitle" style="margin-top:0;"></h2>
       <p id="modalDesc"></p>
       <br>
-      <a id="modalLink" class="btn" target="_blank">Baixar agora</a>
+      <a id="modalLink" class="btn" target="_blank" onclick="registerDownload()">Baixar agora</a>
     </div>
   </div>
 </div>
 
 <script>
+// IDs únicos adicionados a cada jogo para controle do contador
 const jogos=[
-{
- nome:"Red Dead Redemption 2 Mobile",
- cat:"PORT",
- top:true,
- img:"https://assets.xboxservices.com/assets/f2/09/f2093a9f-81ef-4ddd-9128-7e409ab3e6ad.jpg?n=Red-Dead-Redemption-II_GLP-Page-Hero-1084_1920x1080.jpg",
- desc:"Port não oficial de Red Dead Redemption 2 para Android.",
- link:"https://www.mediafire.com/file/zbf7ayb5bm8d3gn/RED+DEAD+2+MOBILE.zip/file"
-},
-{
- nome:"Cuphead Mobile",
- cat:"INDIE",
- top:true,
- img:"https://store-images.s-microsoft.com/image/apps.4380.13527301958862136.ffa8c20b-226b-443c-8d6c-cce51dca9945.821772d6-6ee9-4b33-8ace-4db477cdc3bf?q=90&w=336&h=200",
- desc:"Versão mobile inspirada no clássico Cuphead.",
- link:"https://www.mediafire.com/file/k8m52vc20kyzc55/Cuphead-DLC-v1.0.2.apk/file"
-},
-{
- nome:"Minecraft",
- cat:"SANDBOX",
- top:false,
- img:"https://image.api.playstation.com/vulcan/ap/rnd/202407/1020/91fe046f742042e3b31e57f7731dbe2226e1fd1e02a36223.jpg",
- desc:"Explore, construa e sobreviva em um mundo infinito.",
- link:"https://www.mediafire.com/file/qkhx75rk4976xux/minecraft-v1.26.32.2-final-mod2.apk/file"
-},
-{
- nome:"Hollow Knight: Silksong",
- cat:"INDIE",
- top:true,
- img:"https://gmedia.playstation.com/is/image/SIEPDC/hollow-night-silksong-key-art-ps5-01jul25?$native$",
- desc:"Versão mobile inspirada em Hollow Knight: Silksong.",
- link:"https://www.mediafire.com/file/jn9t6lu2nsct23e/Silksong-v1.2.0-full-apkvision.apk/file"
-},
-{
- nome:"GTA San Andreas",
- cat:"PORT",
- top:true,
- img:"https://preview.redd.it/4lb446ua4ekg1.jpeg?width=140&height=78&auto=webp&s=4f6ff2807b83d4260838b608677712c6ab1c38de",
- desc:"Grand Theft Auto San Andreas para Android.",
- link:"https://www.mediafire.com/file/0w4x6oh346jt0x9/GTA-SA-ver2.11.311-mod-menu-apkvision.apk/file"
-},
-{
- nome:"GTA V Fan Game",
- cat:"FAN",
- top:true,
- img:"https://wallpapercave.com/wp/wp9343942.jpg",
- desc:"Fan Game inspirado em GTA V.",
- link:"https://www.mediafire.com/file/qnb4g5svj7qwe42/LAUCUE4-V6.4-HDR-arm64.apk"
-},
-{
- nome:"The Last of Us Mobile",
- cat:"PORT",
- top:true,
- img:"https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1888930/header.jpg?t=1750959031",
- desc:"Projeto inspirado em The Last of Us.",
- link:"https://www.mediafire.com/file/iph87szxwc6e07g/Tlou.zip/file"
-},
-{
- nome:"Fears to Fathom: Home Alone",
- cat:"TERROR",
- top:true,
- img:"https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1671340/header.jpg",
- desc:"Jogo de terror psicológico.",
- link:"https://www.mediafire.com/file/b8zyh49xnjjy917/Fears+to+Fathom+-+Home+Alone_1.0.0_APKPure.xapk/file"
-},
-{
- nome:"Subnautica",
- cat:"SANDBOX",
- top:true,
- img:"https://cdn1.epicgames.com/offer/jaguar/SN_EpicLandscape_2560x1440-68271847bd0a1a7adac3992f9d2a996a_2560x1440-984d9943bcc436738c44220778d4407d?resize=1&w=480&h=270&quality=medium",
- desc:"Explore um planeta oceânico alienígena.",
- link:"https://www.mediafire.com/file/z6djupxvtrqnbct/subnautica_1.22.83416-an1.com.apk/file"
-},
-{
- nome:"Spider Hero Simulator (Spider-Man copia)",
- cat:"FAN",
- top:false,
- img:"https://wallpapercave.com/wp/wp3589308.jpg",
- desc:"Jogo inspirado no Homem-Aranha.",
- link:"https://www.mediafire.com/file/03bsxygj1sieuov/Spider+Fuser_+Hero+Simulator_2.03_APKPure.xapk/file"
-},
-{
- nome:"Undertale Mobile",
- cat:"INDIE",
- top:true,
- img:"https://images.igdb.com/igdb/image/upload/t_cover_big/co2855.jpg",
- desc:"Versão mobile de Undertale.",
- link:"https://www.mediafire.com/file/9kxcxkirtyn7h9h/undertale.zip/file"
-},
-{
- nome:"Deltarune",
- cat:"INDIE",
- top:true,
- img:"https://wallpapers.com/images/hd/deltarune-heroes-blue-fire-aliqfub1bewvs4i5.jpg",
- desc:"Deltarune para Android.",
- link:"https://www.mediafire.com/file/lca9e9uny0vduqo/Deltarune-v6.0.0-full-apkvision.apk/file"
-},
-{
- nome:"Astro Bot Remake Demo",
- cat:"FAN",
- top:false,
- img:"https://hype.games/_next/image?url=https://img.hype.games/cdn/7a9c93d0-f664-47a0-a9cd-fbb3451015b7aac40cfde55b67abf081d5d9ebcc5e3e08aaa65a4c99424e.jpg&w=750&q=75",
- desc:"Remake feito por fãs do Astro Bot.",
- link:"https://www.mediafire.com/file/uzf4qcp1r9hbs8w/Astro_bot_Fase_1_Remake_Demo_V1.catrobat/file"
-}
+ {id:"rdr2", nome:"Red Dead Redemption 2 Mobile", cat:"PORT", img:"https://assets.xboxservices.com/assets/f2/09/f2093a9f-81ef-4ddd-9128-7e409ab3e6ad.jpg?n=Red-Dead-Redemption-II_GLP-Page-Hero-1084_1920x1080.jpg", desc:"Port não oficial de Red Dead Redemption 2 para Android.", link:"https://www.mediafire.com/file/zbf7ayb5bm8d3gn/RED+DEAD+2+MOBILE.zip/file"},
+ {id:"cuphead", nome:"Cuphead Mobile", cat:"INDIE", img:"https://store-images.s-microsoft.com/image/apps.4380.13527301958862136.ffa8c20b-226b-443c-8d6c-cce51dca9945.821772d6-6ee9-4b33-8ace-4db477cdc3bf?q=90&w=336&h=200", desc:"Versão mobile inspirada no clássico Cuphead.", link:"https://www.mediafire.com/file/k8m52vc20kyzc55/Cuphead-DLC-v1.0.2.apk/file"},
+ {id:"minecraft", nome:"Minecraft", cat:"SANDBOX", img:"https://image.api.playstation.com/vulcan/ap/rnd/202407/1020/91fe046f742042e3b31e57f7731dbe2226e1fd1e02a36223.jpg", desc:"Explore, construa e sobreviva em um mundo infinito.", link:"https://www.mediafire.com/file/qkhx75rk4976xux/minecraft-v1.26.32.2-final-mod2.apk/file"},
+ {id:"silksong", nome:"Hollow Knight: Silksong", cat:"INDIE", img:"https://gmedia.playstation.com/is/image/SIEPDC/hollow-night-silksong-key-art-ps5-01jul25?$native$", desc:"Versão mobile inspirada em Hollow Knight: Silksong.", link:"https://www.mediafire.com/file/jn9t6lu2nsct23e/Silksong-v1.2.0-full-apkvision.apk/file"},
+ {id:"gtasa", nome:"GTA San Andreas", cat:"PORT", img:"https://preview.redd.it/4lb446ua4ekg1.jpeg?width=140&height=78&auto=webp&s=4f6ff2807b83d4260838b608677712c6ab1c38de", desc:"Grand Theft Auto San Andreas para Android.", link:"https://www.mediafire.com/file/0w4x6oh346jt0x9/GTA-SA-ver2.11.311-mod-menu-apkvision.apk/file"},
+ {id:"gtavfan", nome:"GTA V Fan Game", cat:"FAN", img:"https://wallpapercave.com/wp/wp9343942.jpg", desc:"Fan Game inspirado em GTA V.", link:"https://www.mediafire.com/file/qnb4g5svj7qwe42/LAUCUE4-V6.4-HDR-arm64.apk"},
+ {id:"tlou", nome:"The Last of Us Mobile", cat:"PORT", img:"https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1888930/header.jpg?t=1750959031", desc:"Projeto inspirado em The Last of Us.", link:"https://www.mediafire.com/file/iph87szxwc6e07g/Tlou.zip/file"},
+ {id:"fears", nome:"Fears to Fathom: Home Alone", cat:"TERROR", img:"https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1671340/header.jpg", desc:"Jogo de terror psicológico.", link:"https://www.mediafire.com/file/b8zyh49xnjjy917/Fears+to+Fathom+-+Home+Alone_1.0.0_APKPure.xapk/file"},
+ {id:"subnautica", nome:"Subnautica", cat:"SANDBOX", img:"https://cdn1.epicgames.com/offer/jaguar/SN_EpicLandscape_2560x1440-68271847bd0a1a7adac3992f9d2a996a_2560x1440-984d9943bcc436738c44220778d4407d?resize=1&w=480&h=270&quality=medium", desc:"Explore um planeta oceânico alienígena.", link:"https://www.mediafire.com/file/z6djupxvtrqnbct/subnautica_1.22.83416-an1.com.apk/file"},
+ {id:"spiderman", nome:"Spider Hero Simulator (Spider-Man copia)", cat:"FAN", img:"https://wallpapercave.com/wp/wp3589308.jpg", desc:"Jogo inspirado no Homem-Aranha.", link:"https://www.mediafire.com/file/03bsxygj1sieuov/Spider+Fuser_+Hero+Simulator_2.03_APKPure.xapk/file"},
+ {id:"undertale", nome:"Undertale Mobile", cat:"INDIE", img:"https://images.igdb.com/igdb/image/upload/t_cover_big/co2855.jpg", desc:"Versão mobile de Undertale.", link:"https://www.mediafire.com/file/9kxcxkirtyn7h9h/undertale.zip/file"},
+ {id:"deltarune", nome:"Deltarune", cat:"INDIE", img:"https://wallpapers.com/images/hd/deltarune-heroes-blue-fire-aliqfub1bewvs4i5.jpg", desc:"Deltarune para Android.", link:"https://www.mediafire.com/file/lca9e9uny0vduqo/Deltarune-v6.0.0-full-apkvision.apk/file"},
+ {id:"astrobot", nome:"Astro Bot Remake Demo", cat:"FAN", img:"https://hype.games/_next/image?url=https://img.hype.games/cdn/7a9c93d0-f664-47a0-a9cd-fbb3451015b7aac40cfde55b67abf081d5d9ebcc5e3e08aaa65a4c99424e.jpg&w=750&q=75", desc:"Remake feito por fãs do Astro Bot.", link:"https://www.mediafire.com/file/uzf4qcp1r9hbs8w/Astro_bot_Fase_1_Remake_Demo_V1.catrobat/file"}
 ];
-const grid=document.getElementById("grid");
 
-function render(cat="ALL",q=""){
- grid.innerHTML="";
- jogos.filter(j=>
-  (cat==="ALL"||j.cat===cat)&&
-  j.nome.toLowerCase().includes(q.toLowerCase())
- ).forEach(j=>{
-  grid.innerHTML+=`
-  <div class="card" onclick='openModal(${JSON.stringify(j)})'>
+let downloads = JSON.parse(localStorage.getItem('apkdroid_downloads')) || {};
+let currentGameId = null;
+
+const grid = document.getElementById("grid");
+const trendingGrid = document.getElementById("trending-grid");
+const trendingContainer = document.getElementById("trending-container");
+const catalogTitle = document.getElementById("catalog-title");
+const searchInput = document.getElementById("search");
+
+// Função para retornar o total de downloads de um item
+function getClicks(id) {
+  return downloads[id] || 0;
+}
+
+// Cria o HTML do card exibindo os downloads reais
+function createCardHTML(j, index, isTrending = false) {
+  const count = getClicks(j.id);
+  return `
+  <div class="card" onclick="openModal(${index})">
     <div style="position:relative">
-      ${j.top?'<div class="top">TOP</div>':''}
-      <img src="${j.img}">
+      ${isTrending ? '<div class="top">🔥 TOP</div>' : ''}
+      <img src="${j.img}" alt="${j.nome}">
     </div>
     <div class="info">
       <div class="tag">${j.cat}</div>
       <h3>${j.nome}</h3>
+      <span class="dl-count">📥 ${count} downloads</span>
     </div>
   </div>`;
- });
 }
-render();
 
+// Organiza e renderiza os 3 jogos MAIS clicados no site
+function renderTrending() {
+  trendingGrid.innerHTML = "";
+  
+  // Criar uma cópia mapeando com seus indexes originais para não quebrar o modal
+  const ordenados = jogos
+    .map((jogo, index) => ({ ...jogo, originalIndex: index }))
+    .sort((a, b) => getClicks(b.id) - getClicks(a.id));
+
+  // Filtra apenas jogos que tenham pelo menos 1 download registrado
+  const maisBaixados = ordenados.filter(j => getClicks(j.id) > 0).slice(0, 3);
+
+  if (maisBaixados.length > 0) {
+    trendingContainer.style.display = "block";
+    maisBaixados.forEach(j => {
+      trendingGrid.innerHTML += createCardHTML(j, j.originalIndex, true);
+    });
+  } else {
+    trendingContainer.style.display = "none"; // Esconde caso ninguém tenha baixado nada ainda
+  }
+}
+
+// Renderiza a lista principal
+function render(cat="ALL", q=""){
+  grid.innerHTML = "";
+  const query = q.trim().toLowerCase();
+
+  if (query !== "" || cat !== "ALL") {
+    trendingContainer.style.display = "none";
+    catalogTitle.innerText = "🔍 RESULTADOS DA BUSCA";
+  } else {
+    renderTrending(); // Atualiza a seção em alta
+    catalogTitle.innerText = "🎮 TODOS OS JOGOS";
+  }
+
+  jogos.forEach((j, index) => {
+    const matchesCat = (cat === "ALL" || j.cat === cat);
+    const matchesQuery = j.nome.toLowerCase().includes(query);
+
+    if (matchesCat && matchesQuery) {
+      grid.innerHTML += createCardHTML(j, index, false);
+    }
+  });
+
+  if (grid.innerHTML === "") {
+    grid.innerHTML = `<p style="color: var(--muted); grid-column: 1/-1; text-align: center; padding: 40px 0;">Nenhum jogo encontrado.</p>`;
+  }
+}
+
+// Salva o clique no armazenamento do navegador
+function registerDownload() {
+  if (currentGameId) {
+    downloads[currentGameId] = (downloads[currentGameId] || 0) + 1;
+    localStorage.setItem('apkdroid_downloads', JSON.stringify(downloads));
+    
+    // Atualiza as listas na hora sem recarregar a página
+    const activeFilter = document.querySelector(".filter.active").dataset.cat;
+    render(activeFilter, searchInput.value);
+  }
+}
+
+// Inicializadores de eventos
 document.querySelectorAll(".filter").forEach(f=>{
- f.onclick=()=>{
-  document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
-  f.classList.add("active");
-  render(f.dataset.cat,search.value);
- };
+  f.onclick=()=>{
+    document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
+    f.classList.add("active");
+    render(f.dataset.cat, searchInput.value);
+  };
 });
-search.oninput=()=>render(document.querySelector(".filter.active").dataset.cat,search.value);
 
-function openModal(j){
- modal.style.display="flex";
- modalImg.src=j.img;
- modalTitle.innerText=j.nome;
- modalDesc.innerText=j.desc;
- modalLink.href=j.link;
+searchInput.oninput = () => {
+  const activeFilter = document.querySelector(".filter.active").dataset.cat;
+  render(activeFilter, searchInput.value);
+};
+
+function openModal(index){
+  const j = jogos[index];
+  currentGameId = j.id; // Guarda o id do jogo aberto para computar o clique
+  
+  document.getElementById("modal").style.display = "flex";
+  document.getElementById("modalImg").src = j.img;
+  document.getElementById("modalTitle").innerText = j.nome;
+  document.getElementById("modalDesc").innerText = j.desc;
+  document.getElementById("modalLink").href = j.link;
 }
-function closeModal(){modal.style.display="none";}
+
+function closeModal(){
+  document.getElementById("modal").style.display = "none";
+  currentGameId = null;
+}
+
+// Início padrão
+render();
 </script>
 
 </body>
